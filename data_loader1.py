@@ -26,7 +26,7 @@ def prepare_training_data():
     with open("Data/dataset.pkl") as f:
         data = pickle.load(f)
 
-    conversations = [" ".join(v["utterance"], v["response"]) for k, v in data.iteritems()]
+    conversations = [" ".join([v["utterance"], v["response"]]) for k, v in data.iteritems()]
     topics = [extract_object(v["obj"])[-1] for k, v in data.iteritems()]
 
     topic_vocab = make_topic_vocab(topics)
