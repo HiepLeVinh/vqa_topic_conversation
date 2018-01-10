@@ -39,3 +39,12 @@ def extract_fc7_features(image_path, model_path):
     fc7_features = sess.run(fc7_tensor, feed_dict=feed_dict)
     sess.close()
     return fc7_features
+
+
+# Extract object (topic) from s strain format
+def extract_object(obj):
+    if obj == "":
+        return "","", "", "", ""
+    else:
+        extract = [x for x in obj.split(";")]
+        return float(extract[0]), float(extract[1]), float(extract[2]), float(extract[3]), float(extract[4]), extract[5]
