@@ -23,7 +23,7 @@ object -  x; y; w; h; id; name
 
 def prepare_training_data():
 
-    with open("data/dataset.pkl") as f:
+    with open("Data/dataset.pkl") as f:
         data = pickle.load(f)
 
     conversations = [" ".join(v["utterance"], v["response"]) for k, v in data.iteritems()]
