@@ -115,7 +115,7 @@ def get_question_answer_vocab(version=2, data_dir='Data'):
 
 
 def make_topic_vocab(topics):
-    top_n = 100
+    top_n = 50
     topic_frequency = Counter()
     for topic in topics:
         topic_frequency[topic] += 1
@@ -146,6 +146,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
     max_conversation_length = 0
     for i, conversation in enumerate(conversations):
         topic = topics[i]
+        # Just keep the popular topics
         if topic in topic_vocab:
             conversation_words = re.findall(word_regex, conversation)
             for word in conversation_words:
