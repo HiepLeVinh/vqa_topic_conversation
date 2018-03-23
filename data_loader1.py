@@ -45,7 +45,7 @@ def prepare_training_data():
             conversation_words = re.findall(word_regex, conversation)
             # conversation: fil id of the question word (not the word), same length with max conversation length
             # keep zero at the emd if length less than max
-            conversation_ids = np.zeros(max_conversation_length, dtype=np.int8)
+            conversation_ids = np.zeros(max_conversation_length, dtype=int)
             for index, word in enumerate(conversation_words):
                 conversation_ids[index] = conversation_vocab[word]
 
@@ -55,7 +55,7 @@ def prepare_training_data():
                 'conversation': conversation_ids
             })
 
-    # print("training_data", training_data)
+    print("training_data", training_data)
     print(len(training_data))
     return data
 
