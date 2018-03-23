@@ -68,7 +68,7 @@ def prepare_training_data():
 
     with open("data/data_file", 'rb') as f:
         data = pickle.load(f)
-        print("conversation_vocab", data["conversation_vocab"])
+        print("topic_vocab", data["topic_vocab"])
 
     return data
 
