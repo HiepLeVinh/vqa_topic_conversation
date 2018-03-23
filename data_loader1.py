@@ -26,7 +26,7 @@ def prepare_training_data():
     with open("data/dataset.pkl", "rb") as f:
         data = pickle.load(f)
 
-    conversations = [" ".join((v["utterance"], v["response")]) for k, v in data.items()]
+    conversations = [" ".join((v["utterance"], v["response"])) for k, v in data.items()]
     topics = [extract_object(v["obj"])[-1] for k, v in data.items()]
 
     topic_vocab = make_topic_vocab(topics)
@@ -100,7 +100,7 @@ def prepare_training_data():
 
 def load_questions_answers(version=2, data_dir='Data'):
     qa_data_file = join(data_dir, 'qa_data_file{}.pkl'.format(version))
-    print qa_data_file
+    print(qa_data_file)
 
     if isfile(qa_data_file):
         with open(qa_data_file) as f:
