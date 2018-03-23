@@ -33,8 +33,8 @@ def prepare_training_data():
     print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
-    # print("conversation_vocab", conversation_vocab)
-    # print("max_conversation_length", max_conversation_length)
+    print("conversation_vocab", conversation_vocab)
+    print("max_conversation_length", max_conversation_length)
 
     # answer_vocab = make_answer_vocab(answers)
     # question_vocab, max_question_length = make_questions_vocab(questions, answers, answer_vocab)
