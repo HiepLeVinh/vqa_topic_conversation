@@ -115,7 +115,7 @@ def get_question_answer_vocab(version=2, data_dir='Data'):
 
 
 def make_topic_vocab(topics):
-    top_n = 50
+    top_n = 100
     topic_frequency = Counter()
     for topic in topics:
         topic_frequency[topic] += 1
