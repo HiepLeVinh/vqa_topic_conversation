@@ -33,7 +33,7 @@ def prepare_training_data():
     print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
-    # print("conversation_vocab", conversation_vocab)
+    print("conversation_vocab", conversation_vocab)
     print("max_conversation_length", max_conversation_length)
 
     word_regex = re.compile(r'\w+')
@@ -55,7 +55,8 @@ def prepare_training_data():
                 'conversation': conversation_ids
             })
 
-    print("training_data", training_data)
+    # print("training_data", training_data)
+    print(len(training_data))
     return data
 
 
