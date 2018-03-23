@@ -33,7 +33,7 @@ def prepare_training_data():
     print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
-    print("conversation_vocab", conversation_vocab)
+    # print("conversation_vocab", conversation_vocab)
     print("max_conversation_length", max_conversation_length)
 
     # answer_vocab = make_answer_vocab(answers)
@@ -154,6 +154,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
             if len(conversation_words) > max_conversation_length:
                 max_conversation_length = len(conversation_words)
 
+    print("conversation_word_frequency", conversation_word_frequency)
     word_freq_threshold = 0
     conversation_word_vocab = {}
     index = 0
