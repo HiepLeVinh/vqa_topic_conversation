@@ -150,7 +150,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
     word_freq_threshold = 0
     conversation_word_vocab = {}
     index = 0
-    for word, frequency in conversation_word_frequency:
+    for word, frequency in conversation_word_frequency.items():
         if frequency > word_freq_threshold:
             # +1 for accounting the zero padding for batch training
             # Set index for conversation word
