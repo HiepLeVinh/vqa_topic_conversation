@@ -44,7 +44,7 @@ def extract_fc7_features(image_path, model_path):
 # Extract object (topic) from s strain format
 def extract_object(obj):
     if obj == "":
-        return "","", "", "", ""
+        return "", "", "", "", ""
     else:
         extract = [x for x in obj.split(";")]
         return float(extract[0]), float(extract[1]), float(extract[2]), float(extract[3]), float(extract[4]), extract[5]

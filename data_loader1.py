@@ -11,26 +11,26 @@ from collections import Counter
 """
 Data format from dataset.pkl
 {
-"image_id1": {"utterance": utterance, "response": response, "obj": obj},
+"image_id1": {"utterance": utterance, "response": response, "obj": obj,
+                "utterance_person_info": utterance_person_info, "response_person_info": response_person_info},
 "image_id2": ...
 }
 image_id: long
-utterance - text
-response - text
-object -  x; y; w; h; id; name
+utterance, response - text
+obj (topic), utterance_person_info, response_person_info -  x; y; w; h; id; name
 """
 
 
 def prepare_training_data():
 
-    with open("Data/dataset.pkl") as f:
+    with open("data/dataset.pkl", "rb") as f:
         data = pickle.load(f)
 
-    conversations = [" ".join([v["utterance"], v["response"]]) for k, v in data.iteritems()]
-    topics = [extract_object(v["obj"])[-1] for k, v in data.iteritems()]
+    conversations = [" ".join((v["utterance"], v["response")]) for k, v in data.items()]
+    topics = [extract_object(v["obj"])[-1] for k, v in data.items()]
 
     topic_vocab = make_topic_vocab(topics)
-    print(topic_vocab)
+    print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
     print(conversation_vocab)
@@ -120,7 +120,7 @@ def make_topic_vocab(topics):
     for topic in topics:
         topic_frequency[topic] += 1
 
-    topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.iteritems()]
+    topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.items()]
     topic_frequency_tuples.sort()
     topic_frequency_tuples = topic_frequency_tuples[0:top_n - 1]
 
@@ -153,6 +153,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
     for word, frequency in conversation_word_frequency:
         if frequency > word_freq_threshold:
             # +1 for accounting the zero padding for batch training
+            # Set index for conversation word
             conversation_word_vocab[word] = index + 1
             index += 1
 
