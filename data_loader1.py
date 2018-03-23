@@ -33,8 +33,8 @@ def prepare_training_data():
     print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
-    print("conversation_vocab", conversation_vocab)
-    print("max_conversation_length", max_conversation_length)
+    # print("conversation_vocab", conversation_vocab)
+    # print("max_conversation_length", max_conversation_length)
 
     # answer_vocab = make_answer_vocab(answers)
     # question_vocab, max_question_length = make_questions_vocab(questions, answers, answer_vocab)
@@ -122,9 +122,12 @@ def make_topic_vocab(topics):
 
     topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.items()]
     topic_frequency_tuples.sort()
-    print("topic_frequency_sort", topic_frequency_tuples)
-    print("total topic", len(topics))
     topic_frequency_tuples = topic_frequency_tuples[0:top_n - 1]
+    print("total topic", len(topics))
+    print("topic_frequency_sort", topic_frequency_tuples)
+    total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples])
+    print("total_popular_topic_count", total_popular_topic_count)
+    print("total_UNK", len(topics) - total_popular_topic_count)
 
     topic_vocab = {}
     for i, topic_freq in enumerate(topic_frequency_tuples):
