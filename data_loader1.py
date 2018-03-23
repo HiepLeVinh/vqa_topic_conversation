@@ -1,9 +1,6 @@
-import json
-import argparse
 from os.path import isfile, join
 import re
 import numpy as np
-import pprint
 import pickle
 from utils import extract_object
 from collections import Counter
@@ -36,6 +33,7 @@ def prepare_training_data():
     print("conversation_vocab", conversation_vocab)
     print("max_conversation_length", max_conversation_length)
 
+    print("Extracting training data")
     word_regex = re.compile(r'\w+')
     training_data = []
     for i, image_id in enumerate(data.keys()):
@@ -56,7 +54,22 @@ def prepare_training_data():
             })
 
     print("training_data", training_data)
-    print(len(training_data))
+    print("training data len", len(training_data))
+
+    data = {
+        "training": training_data,
+        "topic_vocab": topic_vocab,
+        "conversation_vocab": conversation_vocab,
+        "max_conversation_length": max_conversation_length
+    }
+    print("Saving data")
+    with open("data/data_file", 'wb') as f:
+        pickle.dump(data, f)
+
+    with open("data/data_file", 'rb') as f:
+        data = pickle.load(f)
+        print(data)
+
     return data
 
 

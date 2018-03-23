@@ -16,6 +16,4 @@ Step by step to implement the proposed model:
  - question concat with response -> conversation: Just count the conversation of the popular topics. If the conversation
  word count is larger than the threshold, add it the the conversation vocabulary. "UNK" is the last conversation word.
  We keep track the longest conversation length.
-
-
-Things to do: lower case all the words (at the data set creation step)
+ - save image id, topic id, conversation list of ids of popular topics only to training data
