@@ -122,16 +122,16 @@ def make_topic_vocab(topics):
 
     topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.items()]
     topic_frequency_tuples.sort()
-    topic_frequency_tuples = topic_frequency_tuples[0:top_n - 1]
+    topic_frequency_tuples_top = topic_frequency_tuples[0:top_n - 1]
     print("total topic", len(topics))
-    print("topic_frequency_sort", topic_frequency_tuples)
-    total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples])
+    print("topic_frequency_sort", topic_frequency_tuples_top)
+    total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples_top])
     print("total_popular_topic_count", total_popular_topic_count)
     print("total_UNK", len(topics) - total_popular_topic_count)
     print("total One", len([x[0] for x in topic_frequency_tuples if x[0] == -1]))
 
     topic_vocab = {}
-    for i, topic_freq in enumerate(topic_frequency_tuples):
+    for i, topic_freq in enumerate(topic_frequency_tuples_top):
         topic = topic_freq[1]
         topic_vocab[topic] = i
 
