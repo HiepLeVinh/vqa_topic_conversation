@@ -47,7 +47,7 @@ def prepare_training_data():
             # keep zero at the emd if length less than max
             conversation_ids = np.zeros(max_conversation_length)
             for index, word in enumerate(conversation_words):
-                conversation_ids[index] = conversation_vocab[word]
+                conversation_ids[index] = int(conversation_vocab[word])
 
             training_data.append({
                 'image_id': image_id,
