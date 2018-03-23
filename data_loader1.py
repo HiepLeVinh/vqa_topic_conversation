@@ -36,65 +36,26 @@ def prepare_training_data():
     # print("conversation_vocab", conversation_vocab)
     print("max_conversation_length", max_conversation_length)
 
-    # answer_vocab = make_answer_vocab(answers)
-    # question_vocab, max_question_length = make_questions_vocab(questions, answers, answer_vocab)
-    # print "Max Question Length", max_question_length
-    # word_regex = re.compile(r'\w+')
-    # training_data = []
-    # for i, question in enumerate(t_questions['questions']):
-    #     ans = t_answers['annotations'][i]['multiple_choice_answer']
-    #     if ans in answer_vocab:
-    #         training_data.append({
-    #             'image_id': t_answers['annotations'][i]['image_id'],
-    #             'question': np.zeros(max_question_length),
-    #             'answer': answer_vocab[ans] # id, not the word
-    #         })
-    #         question_words = re.findall(word_regex, question['question'])
-    #
-    #         # question: fill id of the question word (not the word), same length of max question length,
-    #         # fill zero if length less than max
-    #         base = max_question_length - len(question_words)
-    #         for i in range(0, len(question_words)):
-    #             training_data[-1]['question'][base + i] = question_vocab[question_words[i]]
-    #
-    # print "Training Data", len(training_data)
-    # val_data = []
-    # for i, question in enumerate(v_questions['questions']):
-    #     ans = v_answers['annotations'][i]['multiple_choice_answer']
-    #     if ans in answer_vocab:
-    #         val_data.append({
-    #             'image_id': v_answers['annotations'][i]['image_id'],
-    #             'question': np.zeros(max_question_length),
-    #             'answer': answer_vocab[ans]
-    #         })
-    #         question_words = re.findall(word_regex, question['question'])
-    #
-    #         base = max_question_length - len(question_words)
-    #         for i in range(0, len(question_words)):
-    #             val_data[-1]['question'][base + i] = question_vocab[question_words[i]]
-    #
-    # print "Validation Data", len(val_data)
-    #
-    # data = {
-    #     'training': training_data,
-    #     'validation': val_data,
-    #     'answer_vocab': answer_vocab,
-    #     'question_vocab': question_vocab,
-    #     'max_question_length': max_question_length
-    # }
-    #
-    # print "Saving qa_data"
-    # with open(qa_data_file, 'wb') as f:
-    #     pickle.dump(data, f)
-    #
-    # with open(vocab_file, 'wb') as f:
-    #     vocab_data = {
-    #         'answer_vocab': data['answer_vocab'],
-    #         'question_vocab': data['question_vocab'],
-    #         'max_question_length': data['max_question_length']
-    #     }
-    #     pickle.dump(vocab_data, f)
+    word_regex = re.compile(r'\w+')
+    training_data = []
+    for i, image_id in enumerate(data.keys()):
+        topic = topics[i]
+        if topic in topic_vocab:
+            conversation = conversations[i]
+            conversation_words = re.findall(word_regex, conversation)
+            # conversation: fil id of the question word (not the word), same length with max conversation length
+            # keep zero at the emd if length less than max
+            conversation_ids = np.zeros(max_conversation_length)
+            for index, word in enumerate(conversation_words):
+                conversation_ids[index] = conversation_vocab[word]
 
+            training_data.append({
+                'image_id': image_id,
+                'topic': topic_vocab[topic],  # id, not the word
+                'conversation': conversation_ids
+            })
+
+    print("training_data", training_data)
     return data
 
 
@@ -160,7 +121,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
     index = 0
     for word, frequency in conversation_word_frequency.items():
         if frequency > word_freq_threshold:
-            # +1 for accounting the zero padding for batch training
+            # +1 for accounting the zero padding for batch training, index 0 is used to fill missing length conversation
             # Set index for conversation word
             conversation_word_vocab[word] = index + 1
             index += 1

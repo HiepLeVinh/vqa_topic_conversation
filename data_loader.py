@@ -32,24 +32,24 @@ def prepare_training_data(version=2, data_dir='Data'):
             data = pickle.load(f)
             return data
 
-    print "Loading Training questions"
+    print("Loading Training questions")
     with open(t_q_json_file) as f:
         t_questions = json.loads(f.read())
 
-    print "Loading Training answers"
+    print("Loading Training answers")
     with open(t_a_json_file) as f:
         t_answers = json.loads(f.read())
 
-    print "Loading Val questions"
+    print("Loading Val questions")
     with open(v_q_json_file) as f:
         v_questions = json.loads(f.read())
 
-    print "Loading Val answers"
+    print("Loading Val answers")
     with open(v_a_json_file) as f:
         v_answers = json.loads(f.read())
 
-    print "Ans", len(t_answers['annotations']), len(v_answers['annotations'])
-    print "Qu", len(t_questions['questions']), len(v_questions['questions'])
+    print("Ans", len(t_answers['annotations']), len(v_answers['annotations'])
+    print("Qu", len(t_questions['questions']), len(v_questions['questions']))
 
     answers = t_answers['annotations'] + v_answers['annotations']
     questions = t_questions['questions'] + v_questions['questions']
