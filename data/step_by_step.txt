@@ -1,6 +1,6 @@
 Step by step to implement the proposed model:
 
-1. Compress all the data:
+1. Compress all the data: create_dataset.py in visual genome project
  - image_id and the image
  - utterance person: location x, y, w, h, id, and name
  - response person: location x, y, w, h, id, and name
@@ -9,7 +9,7 @@ Step by step to implement the proposed model:
   - object: location x, y, w, h, id, and name
 
 
-2. Extract and pre-process data
+2. Extract and pre-process data: data_loader1.py
  - image: keep the same (the images are already normalized to a same size)
  - utterance and response person: keep the location
  - topic: keep top 50 popular topics, the 50th topic is "UNK" including all the less popular topics
@@ -17,3 +17,11 @@ Step by step to implement the proposed model:
  word count is larger than the threshold, add it the the conversation vocabulary. "UNK" is the last conversation word.
  We keep track the longest conversation length.
  - save image id, topic id, conversation list of ids of popular topics only to training data
+
+.................I am here........................................
+
+3. Build a simple graph: vis_lstm_model.py
+Input: conversation word ids, image extracted with VGG
+Output: bounding box position of the object (topic)
+-- Visualize the bounding boxes and compare with the ground truth
+
