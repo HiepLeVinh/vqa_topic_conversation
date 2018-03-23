@@ -1,5 +1,5 @@
 .DS_Store
-Data/*
+Data/vgg16.tfmodel
 !Data/download_data.sh
 .idea*
 *.pdf
@@ -18,4 +18,3 @@ vislstm.png
 sample_aws.sh
 train_fc7.h5
 train_image_id_list.h5
-vgg16.tfmodel
