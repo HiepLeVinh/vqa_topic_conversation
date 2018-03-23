@@ -128,6 +128,7 @@ def make_topic_vocab(topics):
     total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples])
     print("total_popular_topic_count", total_popular_topic_count)
     print("total_UNK", len(topics) - total_popular_topic_count)
+    print("total One", len([x[0] for x in topic_frequency_tuples if x[0] == -1]))
 
     topic_vocab = {}
     for i, topic_freq in enumerate(topic_frequency_tuples):
