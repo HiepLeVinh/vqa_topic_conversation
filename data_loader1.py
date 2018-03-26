@@ -96,7 +96,7 @@ def make_topic_vocab(topics, num_topic):
 
     topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.items()]
     topic_frequency_tuples.sort()
-    topic_frequency_tuples_top = topic_frequency_tuples[0:top_n - 1]
+    topic_frequency_tuples_top = topic_frequency_tuples[0:num_topic - 1]
     print("total topic", len(topics))
     print("topic_frequency_sort", topic_frequency_tuples_top)
     total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples_top])
