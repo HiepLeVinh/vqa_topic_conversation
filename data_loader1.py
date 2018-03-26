@@ -156,4 +156,4 @@ def load_fc7_features(data_dir, split):
     return fc7_features, image_id_list
 
 
-# prepare_training_data()
+prepare_training_data()
