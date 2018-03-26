@@ -22,6 +22,5 @@ Step by step to implement the proposed model:
 
 3. Build a simple graph: vis_lstm_model.py
 Input: conversation word ids, image extracted with VGG
-Output: bounding box position of the object (topic)
+Output: object / bounding box position of the object (topic)
 -- Visualize the bounding boxes and compare with the ground truth
-

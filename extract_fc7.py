@@ -2,7 +2,7 @@ import tensorflow as tf
 from scipy import misc
 from os import listdir
 from os.path import isfile, join
-import data_loader
+import data_loader1
 import utils
 import argparse
 import numpy as np
@@ -15,9 +15,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--split', type=str, default='train',
                         help='train/val')
-    parser.add_argument('--model_path', type=str, default='Data/vgg16.tfmodel',
-                        help='Pretrained VGG16 Model')
-    parser.add_argument('--data_dir', type=str, default='Data',
+    parser.add_argument('--model_path', type=str, default='data/vgg16.tfmodel',
+                        help='Pre-trained VGG16 Model')
+    parser.add_argument('--data_dir', type=str, default='data',
                         help='Data directory')
     parser.add_argument('--batch_size', type=int, default=10,
                         help='Batch Size')
@@ -37,10 +37,10 @@ def main():
     graph = tf.get_default_graph()
 
     for opn in graph.get_operations():
-        print "Name", opn.name, opn.values()
+        print("Name", opn.name, opn.values())
 
-    all_data = data_loader.load_questions_answers()
-    print all_data
+    all_data = data_loader1.load_data()
+    print(all_data)
     if args.split == "train":
         qa_data = all_data['training']
     else:
@@ -51,7 +51,7 @@ def main():
         image_ids[qa['image_id']] = 1
 
     image_id_list = [img_id for img_id in image_ids]
-    print "Total Images", len(image_id_list)
+    print("Total Images", len(image_id_list))
 
     sess = tf.Session()
     fc7 = np.ndarray((len(image_id_list), 4096))
@@ -66,7 +66,7 @@ def main():
             if idx >= len(image_id_list):
                 break
             image_file = join(args.data_dir,
-                              '%s2014/COCO_%s2014_%.12d.jpg' % (args.split, args.split, image_id_list[idx]))
+                              'Group6/%s_%d.jpg' % (args.split, image_id_list[idx]))
             image_batch[i, :, :, :] = utils.load_image_array(image_file)
             idx += 1
             count += 1
@@ -76,21 +76,21 @@ def main():
         fc7_batch = sess.run(fc7_tensor, feed_dict=feed_dict)
         fc7[(idx - count):idx, :] = fc7_batch[0:count, :]
         end = time.clock()
-        print "Time for batch 10 photos", end - start
-        print "Hours For Whole Dataset", (len(image_id_list) * 1.0) * (end - start) / 60.0 / 60.0 / 10.0
+        print("Time for batch 10 photos", end - start)
+        print("Hours For Whole Dataset", (len(image_id_list) * 1.0) * (end - start) / 60.0 / 60.0 / 10.0)
 
-        print "Images Processed", idx
+        print("Images Processed", idx)
 
-    print "Saving fc7 features"
+    print("Saving fc7 features")
     h5f_fc7 = h5py.File(join(args.data_dir, args.split + '_fc7.h5'), 'w')
     h5f_fc7.create_dataset('fc7_features', data=fc7)
     h5f_fc7.close()
 
-    print "Saving image id list"
+    print("Saving image id list")
     h5f_image_id_list = h5py.File(join(args.data_dir, args.split + '_image_id_list.h5'), 'w')
     h5f_image_id_list.create_dataset('image_id_list', data=image_id_list)
     h5f_image_id_list.close()
-    print "Done!"
+    print("Done!")
 
 
 if __name__ == '__main__':

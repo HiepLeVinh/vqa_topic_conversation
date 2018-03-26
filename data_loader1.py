@@ -73,8 +73,8 @@ def prepare_training_data():
     return data
 
 
-def load_questions_answers(version=2, data_dir='Data'):
-    qa_data_file = join(data_dir, 'qa_data_file{}.pkl'.format(version))
+def load_data(data_dir='data'):
+    qa_data_file = join(data_dir, 'data_file.pkl')
     print(qa_data_file)
 
     if isfile(qa_data_file):
