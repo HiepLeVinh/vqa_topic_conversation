@@ -18,7 +18,7 @@ obj (topic), utterance_person_info, response_person_info -  x; y; w; h; id; name
 """
 
 
-def prepare_training_data():
+def prepare_training_data(num_topic):
 
     with open("data/dataset.pkl", "rb") as f:
         data = pickle.load(f)
@@ -26,7 +26,7 @@ def prepare_training_data():
     conversations = [" ".join((v["utterance"], v["response"])) for k, v in data.items()]
     topics = [extract_object(v["obj"])[-1] for k, v in data.items()]
 
-    topic_vocab = make_topic_vocab(topics)
+    topic_vocab = make_topic_vocab(topics, num_topic)
     print("topic_vocab", topic_vocab)
 
     conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
@@ -89,8 +89,7 @@ def get_question_answer_vocab(version=2, data_dir='Data'):
     return vocab_data
 
 
-def make_topic_vocab(topics):
-    top_n = 10
+def make_topic_vocab(topics, num_topic):
     topic_frequency = Counter()
     for topic in topics:
         topic_frequency[topic] += 1
@@ -110,7 +109,7 @@ def make_topic_vocab(topics):
         topic = topic_freq[1]
         topic_vocab[topic] = i
 
-    topic_vocab['UNK'] = top_n - 1
+    topic_vocab['UNK'] = num_topic - 1
     return topic_vocab
 
 
