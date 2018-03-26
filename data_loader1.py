@@ -74,7 +74,7 @@ def prepare_training_data():
 
 
 def load_data(data_dir='data'):
-    qa_data_file = join(data_dir, 'data_file.pkl')
+    qa_data_file = join(data_dir, 'data_file')
     print(qa_data_file)
 
     if isfile(qa_data_file):
@@ -156,4 +156,4 @@ def load_fc7_features(data_dir, split):
     return fc7_features, image_id_list
 
 
-prepare_training_data()
+# prepare_training_data()
