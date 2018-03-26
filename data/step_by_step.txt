@@ -18,11 +18,13 @@ Step by step to implement the proposed model:
  We keep track the longest conversation length.
  - save image id, topic id, conversation list of ids of popular topics only to training data
 
-.................I am here........................................
 
 3. Extract and save image feature: extract_fc7.py
+
+.................I am here........................................
 
 4. Build a simple graph: vis_lstm_model.py
 Input: conversation word ids, image extracted with VGG
 Output: object / bounding box position of the object (topic)
 -- Visualize the bounding boxes and compare with the ground truth
+
