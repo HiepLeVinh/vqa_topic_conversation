@@ -78,7 +78,7 @@ def main():
 
         pred, ans_prob = sess.run([t_prediction, t_ans_probab], feed_dict={
             input_tensors['fc7']: fc7,
-            input_tensors['conversation']: sentence,
+            input_tensors['sentence']: sentence,
         })
 
         batch_no += 1
