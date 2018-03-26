@@ -13,7 +13,7 @@ def main():
                         help='fc7_feature_length')
     parser.add_argument('--rnn_size', type=int, default=128,
                         help='rnn_size')
-    parser.add_argument('--embedding_size', type=int, default=512,
+    parser.add_argument('--embedding_size', type=int, default=128,
                         help='embedding_size'),
     parser.add_argument('--word_emb_dropout', type=float, default=0.5,
                         help='word_emb_dropout')
