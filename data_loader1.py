@@ -56,8 +56,12 @@ def prepare_training_data(num_topic):
     print("training_data", training_data)
     print("training data len", len(training_data))
 
+    total_size = len(training_data)
+    training_data_size = int(0.7 * total_size)
+
     data = {
-        "training": training_data,
+        "training": training_data[:training_data_size],
+        "validation": training_data[training_data_size:],
         "topic_vocab": topic_vocab,
         "conversation_vocab": conversation_vocab,
         "max_conversation_length": max_conversation_length
