@@ -1,6 +1,6 @@
 import tensorflow as tf
 import vis_lstm_model
-import data_loader
+import data_loader1
 import argparse
 import numpy as np
 
@@ -29,7 +29,7 @@ def main():
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model119.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
@@ -37,10 +37,10 @@ def main():
     args = parser.parse_args()
     print("Reading QA DATA")
     # qa_data = data_loader.load_questions_answers(args)
-    qa_data = data_loader.load_questions_answers(args.version, args.data_dir)
+    qa_data = data_loader1.load_data(args.data_dir)
 
     print("Reading fc7 features")
-    fc7_features, image_id_list = data_loader.load_fc7_features(args.data_dir, 'val')
+    fc7_features, image_id_list = data_loader1.load_fc7_features(args.data_dir, 'val')
     print("FC7 features", fc7_features.shape)
     print("image_id_list", image_id_list.shape)
 
