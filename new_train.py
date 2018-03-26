@@ -117,8 +117,8 @@ def get_training_batch(batch_no, batch_size, fc7_features, image_id_map, qa_data
 
     count = 0
     for i in range(si, ei):
-        sentence[count, :] = qa[i]['question'][:]
-        answer[count, qa[i]['answer']] = 1.0
+        sentence[count, :] = qa[i]['conversation'][:]
+        answer[count, qa[i]['topic']] = 1.0
         fc7_index = image_id_map[qa[i]['image_id']]
         fc7[count, :] = fc7_features[fc7_index][:]
         count += 1
