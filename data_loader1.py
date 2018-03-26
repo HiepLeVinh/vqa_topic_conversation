@@ -90,7 +90,7 @@ def get_question_answer_vocab(version=2, data_dir='Data'):
 
 
 def make_topic_vocab(topics):
-    top_n = 50
+    top_n = 10
     topic_frequency = Counter()
     for topic in topics:
         topic_frequency[topic] += 1
@@ -154,6 +154,3 @@ def load_fc7_features(data_dir, split):
     with h5py.File(join(data_dir, (split + '_image_id_list.h5')), 'r') as hf:
         image_id_list = np.array(hf.get('image_id_list'))
     return fc7_features, image_id_list
-
-
-# prepare_training_data()
