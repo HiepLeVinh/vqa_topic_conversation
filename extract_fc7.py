@@ -66,7 +66,7 @@ def main():
             if idx >= len(image_id_list):
                 break
             image_file = join(args.data_dir,
-                              'Group6/%s_%d.jpg' % (args.split, image_id_list[idx]))
+                              'Group6/%d.jpg' % image_id_list[idx])
             image_batch[i, :, :, :] = utils.load_image_array(image_file)
             idx += 1
             count += 1
