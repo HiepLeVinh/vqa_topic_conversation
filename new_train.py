@@ -60,7 +60,7 @@ def main():
         'fc7_feature_length': args.fc7_feature_length,
         'lstm_steps': qa_data['max_conversation_length'] + 1,
         'q_vocab_size': len(qa_data['conversation_vocab']),
-        'ans_vocab_size': len(qa_data['answer_vocab'])
+        'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
     model = simple_model.cnn_lstm_model(model_options)
