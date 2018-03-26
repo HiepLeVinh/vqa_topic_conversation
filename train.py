@@ -35,13 +35,13 @@ def main():
                         help='VQA data version')
 
     args = parser.parse_args()
-    print "Reading QA DATA"
+    print("Reading QA DATA")
     qa_data = data_loader.load_questions_answers(args.version, args.data_dir)
 
-    print "Reading fc7 features"
+    print("Reading fc7 features")
     fc7_features, image_id_list = data_loader.load_fc7_features(args.data_dir, 'train')
-    print "FC7 features", fc7_features.shape
-    print "image_id_list", image_id_list.shape
+    print("FC7 features", fc7_features.shape)
+    print("image_id_list", image_id_list.shape)
 
     image_id_map = {}
     for i in xrange(len(image_id_list)):
@@ -87,14 +87,14 @@ def main():
             batch_no += 1
             if args.debug:
                 for idx, p in enumerate(pred):
-                    print ans_map[p], ans_map[np.argmax(answer[idx])]
+                    print(ans_map[p], ans_map[np.argmax(answer[idx])])
 
-                print "Loss", loss_value, batch_no, i
-                print "Accuracy", accuracy
-                print "---------------"
+                print("Loss", loss_value, batch_no, i)
+                print("Accuracy", accuracy)
+                print("---------------")
             else:
-                print "Loss", loss_value, batch_no, i
-                print "Training Accuracy", accuracy
+                print("Loss", loss_value, batch_no, i)
+                print("Training Accuracy", accuracy)
 
         save_path = saver.save(sess, "Data/Models/model{}.ckpt".format(i))
 

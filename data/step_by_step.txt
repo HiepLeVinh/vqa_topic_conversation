@@ -20,7 +20,9 @@ Step by step to implement the proposed model:
 
 .................I am here........................................
 
-3. Build a simple graph: vis_lstm_model.py
+3. Extract and save image feature: extract_fc7.py
+
+4. Build a simple graph: vis_lstm_model.py
 Input: conversation word ids, image extracted with VGG
 Output: object / bounding box position of the object (topic)
 -- Visualize the bounding boxes and compare with the ground truth

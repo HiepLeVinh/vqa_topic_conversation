@@ -78,7 +78,7 @@ def load_data(data_dir='data'):
     print(qa_data_file)
 
     if isfile(qa_data_file):
-        with open(qa_data_file) as f:
+        with open(qa_data_file, 'rb') as f:
             data = pickle.load(f)
             return data
 
