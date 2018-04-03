@@ -20,7 +20,7 @@ obj (topic), utterance_person_info, response_person_info -  x; y; w; h; id; name
 
 def prepare_training_data(num_topic):
 
-    with open("data/dataset.pkl", "rb") as f:
+    with open("data/dataset_remove.pkl", "rb") as f:
         data = pickle.load(f)
 
     conversations = [" ".join((v["utterance"], v["response"])) for k, v in data.items()]
@@ -126,13 +126,9 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
         topic = topics[i]
         # Just keep the popular topics
         if topic in topic_vocab:
-            reduction_len = 0  # due to words in topic
             conversation_words = re.findall(word_regex, conversation)
             for word in conversation_words:
-                if word not in topic:
-                    conversation_word_frequency[word] += 1
-                else:
-                    reduction_len
+                conversation_word_frequency[word] += 1
             if len(conversation_words) > max_conversation_length:
                 max_conversation_length = len(conversation_words)
 
