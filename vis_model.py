@@ -2,7 +2,7 @@ import tensorflow as tf
 import math
 
 
-class Vis_lstm_model:
+class cn_model:
     def init_weight(self, dim_in, dim_out, name=None, stddev=1.0):
         return tf.Variable(tf.truncated_normal([dim_in, dim_out], stddev=stddev / math.sqrt(float(dim_in))), name=name)
 
