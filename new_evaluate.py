@@ -1,5 +1,5 @@
 import tensorflow as tf
-import lstm_model
+import vis_model
 import data_loader1
 import argparse
 import numpy as np
@@ -29,7 +29,7 @@ def main():
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model49.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/model9.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
@@ -57,12 +57,12 @@ def main():
         'word_emb_dropout': args.word_emb_dropout,
         'image_dropout': args.image_dropout,
         'fc7_feature_length': args.fc7_feature_length,
-        'lstm_steps': qa_data['max_conversation_length'],
+        'lstm_steps': qa_data['max_conversation_length'] + 1,
         'q_vocab_size': len(qa_data['conversation_vocab']),
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = lstm_model.lstm_model(model_options)
+    model = vis_model.cnn_model(model_options)
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()

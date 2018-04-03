@@ -1,5 +1,5 @@
 import tensorflow as tf
-import lstm_model
+import vis_model
 import data_loader1
 import argparse
 import numpy as np
@@ -25,7 +25,7 @@ def main():
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=50,
+    parser.add_argument('--epochs', type=int, default=10,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
@@ -58,12 +58,12 @@ def main():
         'word_emb_dropout': args.word_emb_dropout,
         'image_dropout': args.image_dropout,
         'fc7_feature_length': args.fc7_feature_length,
-        'lstm_steps': qa_data['max_conversation_length'],
+        'lstm_steps': qa_data['max_conversation_length'] + 1,
         'q_vocab_size': len(qa_data['conversation_vocab']),
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = lstm_model.lstm_model(model_options)
+    model = vis_model.cnn_model(model_options)
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()
