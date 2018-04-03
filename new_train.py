@@ -58,7 +58,7 @@ def main():
         'word_emb_dropout': args.word_emb_dropout,
         'image_dropout': args.image_dropout,
         'fc7_feature_length': args.fc7_feature_length,
-        'lstm_steps': qa_data['max_conversation_length'] + 1,
+        'lstm_steps': qa_data['max_conversation_length'],
         'q_vocab_size': len(qa_data['conversation_vocab']),
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
