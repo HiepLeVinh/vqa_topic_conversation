@@ -108,6 +108,7 @@ def get_training_batch(batch_no, batch_size, fc7_features, image_id_map, qa_data
     else:
         qa = qa_data['validation']
 
+    # start and end of batch
     si = (batch_no * batch_size) % len(qa)
     ei = min(len(qa), si + batch_size)
     n = ei - si

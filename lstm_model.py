@@ -45,7 +45,7 @@ class lstm_model:
             state_is_tuple=True
         ) if self.options['num_lstm_layers'] > 1 else self._create_one_cell()
 
-        val, _ = tf.nn.dynamic_rnn(cell, word_embeddings, dtype=tf.float32)
+        val, _ = tf.nn.dynamic_rnn(cell, word_embeddings, dtype=tf.float32, time_major=True)
         val = tf.transpose(val, [1, 0, 2])  # num_steps, batch, lstm_size
         # get the last element of num_steps tensor (batch_size, lstm_size)
         last_output = tf.gather(val, int(val.get_shape()[0]) - 2, name="last_lstm_output")
@@ -61,7 +61,7 @@ class lstm_model:
         for i in range(self.options['lstm_steps'] - 1):
             word_emb = tf.nn.embedding_lookup(self.Wemb, sentence[:, i])
             word_emb = tf.nn.dropout(word_emb, self.options['word_emb_dropout'], name="word_emb" + str(i))
-            word_embeddings.append(word_emb)
+            word_embeddings.append(word_emb)  # num_step, batch_size, emb_size
 
         # image_embedding = tf.matmul(fc7_features, self.Wimg) + self.bimg
         # image_embedding = tf.nn.tanh(image_embedding)
