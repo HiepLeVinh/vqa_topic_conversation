@@ -1,5 +1,5 @@
 import tensorflow as tf
-import simple_model
+import vis_model
 import data_loader1
 import argparse
 import numpy as np
@@ -63,7 +63,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = simple_model.cnn_lstm_model(model_options)
+    model = vis_model.cnn_lstm_model(model_options)
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()

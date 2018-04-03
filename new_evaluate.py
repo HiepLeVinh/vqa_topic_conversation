@@ -1,5 +1,5 @@
 import tensorflow as tf
-import vis_lstm_model
+import vis_model
 import data_loader1
 import argparse
 import numpy as np
@@ -62,7 +62,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = vis_lstm_model.Vis_lstm_model(model_options)
+    model = vis_model.Vis_lstm_model(model_options)
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()
