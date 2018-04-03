@@ -126,9 +126,13 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
         topic = topics[i]
         # Just keep the popular topics
         if topic in topic_vocab:
+            reduction_len = 0  # due to words in topic
             conversation_words = re.findall(word_regex, conversation)
             for word in conversation_words:
-                conversation_word_frequency[word] += 1
+                if word not in topic:
+                    conversation_word_frequency[word] += 1
+                else:
+                    reduction_len
             if len(conversation_words) > max_conversation_length:
                 max_conversation_length = len(conversation_words)
 
