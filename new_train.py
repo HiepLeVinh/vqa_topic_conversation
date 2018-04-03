@@ -25,7 +25,7 @@ def main():
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=10,
+    parser.add_argument('--epochs', type=int, default=50,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
@@ -73,6 +73,7 @@ def main():
     if args.resume_model:
         saver.restore(sess, args.resume_model)
 
+    acc_stat = []
     for i in range(args.epochs):
         batch_no = 0
 
@@ -97,7 +98,8 @@ def main():
             else:
                 print("Loss", loss_value, batch_no, i)
                 print("Training Accuracy", accuracy)
-
+            acc_stat.append(accuracy)
+        print(acc_stat)
         save_path = saver.save(sess, "data/models/model{}.ckpt".format(i))
 
 
