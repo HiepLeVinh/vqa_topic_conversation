@@ -1,5 +1,5 @@
 import tensorflow as tf
-import vis_model
+import simple_model
 import data_loader1
 import argparse
 import numpy as np
@@ -25,7 +25,7 @@ def main():
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=10,
+    parser.add_argument('--epochs', type=int, default=20,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
@@ -63,7 +63,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = vis_model.cnn_model(model_options)
+    model = simple_model.cnn_lstm_model(model_options)
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()

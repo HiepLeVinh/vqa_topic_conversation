@@ -1,5 +1,5 @@
 import tensorflow as tf
-import vis_model
+import simple_model
 import data_loader1
 import argparse
 import numpy as np
@@ -29,7 +29,7 @@ def main():
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model9.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
@@ -62,7 +62,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = vis_model.cnn_model(model_options)
+    model = simple_model.cnn_lstm_model(model_options)
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()
