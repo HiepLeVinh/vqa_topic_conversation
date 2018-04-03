@@ -25,7 +25,7 @@ def main():
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=25,
+    parser.add_argument('--epochs', type=int, default=10,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
