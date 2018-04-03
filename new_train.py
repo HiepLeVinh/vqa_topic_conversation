@@ -21,11 +21,11 @@ def main():
                         help='image_dropout')
     parser.add_argument('--data_dir', type=str, default='data',
                         help='Data directory')
-    parser.add_argument('--batch_size', type=int, default=10,
+    parser.add_argument('--batch_size', type=int, default=32,
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=20,
+    parser.add_argument('--epochs', type=int, default=50,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')

@@ -25,6 +25,7 @@ Step by step to implement the proposed model:
 4. Build a simple graph: simple_model.py
 Input: conversation word ids, image extracted with VGG
 Output: object (topic) id
+Result: train 500, validation 200, Acc: 50%
 
 .................I am here........................................
 
@@ -34,3 +35,4 @@ Input: conversation word ids, image extracted with VGG
 Output: bounding box position of the object (topic)
 -- Visualize the bounding boxes and compare with the ground truth
 
+6. Include people's location to see if it is better or not ? This is important!
