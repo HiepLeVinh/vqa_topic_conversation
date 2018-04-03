@@ -98,7 +98,7 @@ class lstm_model:
         answer = tf.placeholder('float32', [None, self.options['ans_vocab_size']], name="answer")
 
         word_embeddings = []
-        for i in range(self.options['lstm_steps'] - 1):
+        for i in range(self.options['lstm_steps']):
             word_emb = tf.nn.embedding_lookup(self.Wemb, sentence[:, i])
             word_emb = tf.nn.dropout(word_emb, self.options['word_emb_dropout'], name="word_emb" + str(i))
             word_embeddings.append(word_emb)  # num_step, batch_size, emb_size
