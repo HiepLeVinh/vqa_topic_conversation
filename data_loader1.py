@@ -128,10 +128,10 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
         if topic in topic_vocab:
             conversation_words = re.findall(word_regex, conversation)
             for word in conversation_words:
-                # Check word duplicate to topic
+                # Check word duplicate to topic, if found, stop everything
                 if word in topic:
                     print("Duplicate caution word in topic!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                    print(topic, conversation)
+                    print(topic, word, conversation)
                     return [], []
                 conversation_word_frequency[word] += 1
             if len(conversation_words) > max_conversation_length:
