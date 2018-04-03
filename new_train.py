@@ -73,7 +73,6 @@ def main():
     if args.resume_model:
         saver.restore(sess, args.resume_model)
 
-    acc_stat = []
     for i in range(args.epochs):
         batch_no = 0
 
@@ -98,8 +97,6 @@ def main():
             else:
                 print("Loss", loss_value, batch_no, i)
                 print("Training Accuracy", accuracy)
-            acc_stat.append(accuracy)
-        print(acc_stat)
         save_path = saver.save(sess, "data/models/model{}.ckpt".format(i))
 
 

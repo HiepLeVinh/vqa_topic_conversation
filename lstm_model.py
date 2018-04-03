@@ -40,8 +40,6 @@ class lstm_model:
 
     def forward_pass_lstm(self, word_embeddings):
         x = word_embeddings
-        print(self.options['lstm_steps'])
-        print(len(x))
         output = None
         for l in range(self.options['num_lstm_layers']):
             h = [None for i in range(self.options['lstm_steps'])]
@@ -51,8 +49,6 @@ class lstm_model:
                 if lstm_step == 0:
                     lstm_preactive = tf.matmul(x[lstm_step], self.lstm_W[l]) + self.lstm_b[l]
                 else:
-                    print("llllll", l)
-                    print("lstm step", lstm_step)
                     lstm_preactive = tf.matmul(h[lstm_step - 1], self.lstm_U[l]) + tf.matmul(x[lstm_step],
                                                                                              self.lstm_W[l]) + \
                                      self.lstm_b[l]
@@ -131,10 +127,10 @@ class lstm_model:
 
     def build_generator(self):
         fc7_features = tf.placeholder('float32', [None, self.options['fc7_feature_length']], name='fc7')
-        sentence = tf.placeholder('int32', [None, self.options['lstm_steps'] - 1], name="sentence")
+        sentence = tf.placeholder('int32', [None, self.options['lstm_steps']], name="sentence")
 
         word_embeddings = []
-        for i in range(self.options['lstm_steps'] - 1):
+        for i in range(self.options['lstm_steps']):
             word_emb = tf.nn.embedding_lookup(self.Wemb, sentence[:, i])
             word_embeddings.append(word_emb)
 
