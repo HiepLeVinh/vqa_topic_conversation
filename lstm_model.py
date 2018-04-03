@@ -1,5 +1,6 @@
 import tensorflow as tf
 import math
+import numpy as np
 
 
 class lstm_model:
@@ -63,6 +64,7 @@ class lstm_model:
             word_emb = tf.nn.dropout(word_emb, self.options['word_emb_dropout'], name="word_emb" + str(i))
             word_embeddings.append(word_emb)  # num_step, batch_size, emb_size
 
+        print(np.array(word_embeddings).shape)
         # image_embedding = tf.matmul(fc7_features, self.Wimg) + self.bimg
         # image_embedding = tf.nn.tanh(image_embedding)
         # image_embedding = tf.nn.dropout(image_embedding, self.options['image_dropout'], name="vis_features")
