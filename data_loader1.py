@@ -131,6 +131,7 @@ def make_conversation_vocab(conversations, topics, topic_vocab):
                 # Check word duplicate to topic
                 if word in topic:
                     print("Duplicate caution word in topic!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    print(topic, conversation)
                     return [], []
                 conversation_word_frequency[word] += 1
             if len(conversation_words) > max_conversation_length:
