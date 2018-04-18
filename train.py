@@ -1,5 +1,7 @@
 import tensorflow as tf
 import cnn_lstm_model
+import cnn_model
+import lstm_model
 import data_loader
 import argparse
 import numpy as np
@@ -63,7 +65,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = cnn_lstm_model.cnn_lstm_model(model_options)
+    model = cnn_model.cnn_model(model_options)
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()
@@ -97,11 +99,10 @@ def main():
             else:
                 print("Loss", loss_value, batch_no, i)
                 print("Training Accuracy", accuracy)
-        save_path = saver.save(sess, "data/models/model{}.ckpt".format(i))
+        saver.save(sess, "data/models/model{}.ckpt".format(i))
 
 
 def get_training_batch(batch_no, batch_size, fc7_features, image_id_map, qa_data, split):
-    qa = None
     if split == 'train':
         qa = qa_data['training']
     else:

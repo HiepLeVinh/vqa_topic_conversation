@@ -1,5 +1,7 @@
 import tensorflow as tf
 import cnn_lstm_model
+import cnn_model
+import lstm_model
 import data_loader
 import argparse
 import numpy as np
@@ -23,10 +25,10 @@ def main():
                         help='Data directory')
     parser.add_argument('--batch_size', type=int, default=10,
                         help='Batch Size')
-    parser.add_argument('--learning_rate', type=float, default=0.001,
-                        help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=20,
-                        help='Expochs')
+    # parser.add_argument('--learning_rate', type=float, default=0.001,
+    #                     help='Batch Size')
+    # parser.add_argument('--epochs', type=int, default=20,
+    #                     help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
     parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
@@ -36,7 +38,6 @@ def main():
 
     args = parser.parse_args()
     print("Reading QA DATA")
-    # qa_data = data_loader.load_questions_answers(args)
     qa_data = data_loader.load_data(args.data_dir)
 
     print("Reading fc7 features")
@@ -62,7 +63,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = cnn_lstm_model.cnn_lstm_model(model_options)
+    model = cnn_model.cnn_model(model_options)
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()
@@ -97,7 +98,6 @@ def main():
 
 
 def get_batch(batch_no, batch_size, fc7_features, image_id_map, qa_data, split):
-    qa = None
     if split == 'train':
         qa = qa_data['training']
     else:
