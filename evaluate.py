@@ -63,7 +63,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = cnn_model.cnn_model(model_options)
+    model = lstm_model.lstm_model(model_options)
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()

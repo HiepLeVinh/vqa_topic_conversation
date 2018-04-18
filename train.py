@@ -65,7 +65,7 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = cnn_model.cnn_model(model_options)
+    model = lstm_model.lstm_model(model_options)
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()
