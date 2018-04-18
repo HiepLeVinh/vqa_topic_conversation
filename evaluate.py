@@ -31,7 +31,7 @@ def main():
     #                     help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/19.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
@@ -79,7 +79,9 @@ def main():
 
     avg_accuracy = 0.0
     total = 0
-    saver.restore(sess, args.model_path)
+
+    model_path = args.model + args.model_path
+    saver.restore(sess, model_path)
 
     batch_no = 0
     while (batch_no * args.batch_size) < len(qa_data['validation']):
