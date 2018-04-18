@@ -1,3 +1,3 @@
-import data_loader1
+import data_loader
 
-data_loader1.prepare_training_data(num_topic=20)
+data_loader.prepare_training_data(num_topic=20)

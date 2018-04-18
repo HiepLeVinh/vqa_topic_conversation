@@ -1,9 +1,8 @@
 import tensorflow as tf
-import vis_lstm_model
-import data_loader
+from old_code import data_loader, vis_lstm_model
 import argparse
 import numpy as np
-from os.path import isfile, join
+from os.path import join
 import utils
 import re
 

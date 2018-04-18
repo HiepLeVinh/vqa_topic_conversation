@@ -2,7 +2,7 @@ import tensorflow as tf
 from scipy import misc
 from os import listdir
 from os.path import isfile, join
-import data_loader1
+import data_loader
 import utils
 import argparse
 import numpy as np
@@ -39,7 +39,7 @@ def main():
     for opn in graph.get_operations():
         print("Name", opn.name, opn.values())
 
-    all_data = data_loader1.load_data()
+    all_data = data_loader.load_data()
     print(all_data)
     if args.split == "train":
         qa_data = all_data['training']

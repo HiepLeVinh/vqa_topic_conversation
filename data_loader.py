@@ -1,127 +1,88 @@
-import json
-import argparse
 from os.path import isfile, join
 import re
 import numpy as np
-import pprint
 import pickle
+from utils import extract_object
+from collections import Counter
+
+"""
+Data format from dataset.pkl
+{
+"image_id1": {"utterance": utterance, "response": response, "obj": obj,
+                "utterance_person_info": utterance_person_info, "response_person_info": response_person_info},
+"image_id2": ...
+}
+image_id: long
+utterance, response - text
+obj (topic), utterance_person_info, response_person_info -  x; y; w; h; id; name
+"""
 
 
-def prepare_training_data(version=2, data_dir='Data'):
-    if version == 1:
-        t_q_json_file = join(data_dir, 'MultipleChoice_mscoco_train2014_questions.json')
-        t_a_json_file = join(data_dir, 'mscoco_train2014_annotations.json')
+def prepare_training_data(num_topic):
 
-        v_q_json_file = join(data_dir, 'MultipleChoice_mscoco_val2014_questions.json')
-        v_a_json_file = join(data_dir, 'mscoco_val2014_annotations.json')
-        qa_data_file = join(data_dir, 'qa_data_file1.pkl')
-        vocab_file = join(data_dir, 'vocab_file1.pkl')
-    else:
-        t_q_json_file = join(data_dir, 'v2_OpenEnded_mscoco_train2014_questions.json')
-        t_a_json_file = join(data_dir, 'v2_mscoco_train2014_annotations.json')
+    with open("data/dataset_remove.pkl", "rb") as f:
+        data = pickle.load(f)
 
-        v_q_json_file = join(data_dir, 'v2_OpenEnded_mscoco_val2014_questions.json')
-        v_a_json_file = join(data_dir, 'v2_mscoco_val2014_annotations.json')
-        qa_data_file = join(data_dir, 'qa_data_file2.pkl')
-        vocab_file = join(data_dir, 'vocab_file2.pkl')
+    conversations = [" ".join((v["utterance"], v["response"])) for k, v in data.items()]
+    topics = [extract_object(v["obj"])[-1] for k, v in data.items()]
 
-    # IF ALREADY EXTRACTED
-    # qa_data_file = join(data_dir, 'qa_data_file{}.pkl'.format(version))
-    if isfile(qa_data_file):
-        with open(qa_data_file) as f:
-            data = pickle.load(f)
-            return data
+    topic_vocab = make_topic_vocab(topics, num_topic)
+    print("topic_vocab", topic_vocab)
 
-    print("Loading Training questions")
-    with open(t_q_json_file) as f:
-        t_questions = json.loads(f.read())
+    conversation_vocab, max_conversation_length = make_conversation_vocab(conversations, topics, topic_vocab)
+    print("conversation_vocab", conversation_vocab)
+    print("max_conversation_length", max_conversation_length)
 
-    print("Loading Training answers")
-    with open(t_a_json_file) as f:
-        t_answers = json.loads(f.read())
-
-    print("Loading Val questions")
-    with open(v_q_json_file) as f:
-        v_questions = json.loads(f.read())
-
-    print("Loading Val answers")
-    with open(v_a_json_file) as f:
-        v_answers = json.loads(f.read())
-
-    print("Ans", len(t_answers['annotations']), len(v_answers['annotations'])
-    print("Qu", len(t_questions['questions']), len(v_questions['questions']))
-
-    answers = t_answers['annotations'] + v_answers['annotations']
-    questions = t_questions['questions'] + v_questions['questions']
-
-    answer_vocab = make_answer_vocab(answers)
-    question_vocab, max_question_length = make_questions_vocab(questions, answers, answer_vocab)
-    print "Max Question Length", max_question_length
+    print("Extracting training data")
     word_regex = re.compile(r'\w+')
     training_data = []
-    for i, question in enumerate(t_questions['questions']):
-        ans = t_answers['annotations'][i]['multiple_choice_answer']
-        if ans in answer_vocab:
+    for i, image_id in enumerate(data.keys()):
+        topic = topics[i]
+        if topic in topic_vocab:
+            conversation = conversations[i]
+            conversation_words = re.findall(word_regex, conversation)
+            # conversation: fil id of the question word (not the word), same length with max conversation length
+            # keep zero at the emd if length less than max
+            conversation_ids = np.zeros(max_conversation_length, dtype=int)
+            for index, word in enumerate(conversation_words):
+                conversation_ids[index] = conversation_vocab[word]
+
             training_data.append({
-                'image_id': t_answers['annotations'][i]['image_id'],
-                'question': np.zeros(max_question_length),
-                'answer': answer_vocab[ans] # id, not the word
+                'image_id': image_id,
+                'topic': topic_vocab[topic],  # id, not the word
+                'conversation': conversation_ids
             })
-            question_words = re.findall(word_regex, question['question'])
 
-            # question: fill id of the question word (not the word), same length of max question length,
-            # fill zero if length less than max
-            base = max_question_length - len(question_words)
-            for i in range(0, len(question_words)):
-                training_data[-1]['question'][base + i] = question_vocab[question_words[i]]
+    print("training_data", training_data)
+    print("training data len", len(training_data))
 
-    print "Training Data", len(training_data)
-    val_data = []
-    for i, question in enumerate(v_questions['questions']):
-        ans = v_answers['annotations'][i]['multiple_choice_answer']
-        if ans in answer_vocab:
-            val_data.append({
-                'image_id': v_answers['annotations'][i]['image_id'],
-                'question': np.zeros(max_question_length),
-                'answer': answer_vocab[ans]
-            })
-            question_words = re.findall(word_regex, question['question'])
-
-            base = max_question_length - len(question_words)
-            for i in range(0, len(question_words)):
-                val_data[-1]['question'][base + i] = question_vocab[question_words[i]]
-
-    print "Validation Data", len(val_data)
+    total_size = len(training_data)
+    training_data_size = int(0.7 * total_size)
 
     data = {
-        'training': training_data,
-        'validation': val_data,
-        'answer_vocab': answer_vocab,
-        'question_vocab': question_vocab,
-        'max_question_length': max_question_length
+        "training": training_data[:training_data_size],
+        "validation": training_data[training_data_size:],
+        "topic_vocab": topic_vocab,
+        "conversation_vocab": conversation_vocab,
+        "max_conversation_length": max_conversation_length
     }
-
-    print "Saving qa_data"
-    with open(qa_data_file, 'wb') as f:
+    print("Saving data")
+    with open("data/data_file", 'wb') as f:
         pickle.dump(data, f)
 
-    with open(vocab_file, 'wb') as f:
-        vocab_data = {
-            'answer_vocab': data['answer_vocab'],
-            'question_vocab': data['question_vocab'],
-            'max_question_length': data['max_question_length']
-        }
-        pickle.dump(vocab_data, f)
+    with open("data/data_file", 'rb') as f:
+        data = pickle.load(f)
+        print("topic_vocab", data["topic_vocab"])
 
     return data
 
 
-def load_questions_answers(version=2, data_dir='Data'):
-    qa_data_file = join(data_dir, 'qa_data_file{}.pkl'.format(version))
-    print qa_data_file
+def load_data(data_dir='data'):
+    qa_data_file = join(data_dir, 'data_file')
+    print(qa_data_file)
 
     if isfile(qa_data_file):
-        with open(qa_data_file) as f:
+        with open(qa_data_file, 'rb') as f:
             data = pickle.load(f)
             return data
 
@@ -132,67 +93,64 @@ def get_question_answer_vocab(version=2, data_dir='Data'):
     return vocab_data
 
 
-def make_answer_vocab(answers):
-    top_n = 1000
-    answer_frequency = {}
-    for annotation in answers:
-        answer = annotation['multiple_choice_answer']
-        if answer in answer_frequency:
-            answer_frequency[answer] += 1
-        else:
-            answer_frequency[answer] = 1
+def make_topic_vocab(topics, num_topic):
+    topic_frequency = Counter()
+    for topic in topics:
+        topic_frequency[topic] += 1
 
-    answer_frequency_tuples = [(-frequency, answer) for answer, frequency in answer_frequency.iteritems()]
-    answer_frequency_tuples.sort()
-    answer_frequency_tuples = answer_frequency_tuples[0:top_n - 1]
+    topic_frequency_tuples = [(-frequency, topic) for topic, frequency in topic_frequency.items()]
+    topic_frequency_tuples.sort()
+    topic_frequency_tuples_top = topic_frequency_tuples[0:num_topic - 1]
+    print("total topic", len(topics))
+    print("topic_frequency_sort", topic_frequency_tuples_top)
+    total_popular_topic_count = sum([-x[0] for x in topic_frequency_tuples_top])
+    print("total_popular_topic_count", total_popular_topic_count)
+    print("total_UNK", len(topics) - total_popular_topic_count)
+    print("total One", len([x[0] for x in topic_frequency_tuples if x[0] == -1]))
 
-    answer_vocab = {}
-    for i, ans_freq in enumerate(answer_frequency_tuples):
-        # print i, ans_freq
-        ans = ans_freq[1]
-        answer_vocab[ans] = i
+    topic_vocab = {}
+    for i, topic_freq in enumerate(topic_frequency_tuples_top):
+        topic = topic_freq[1]
+        topic_vocab[topic] = i
 
-    answer_vocab['UNK'] = top_n - 1
-    return answer_vocab
+    topic_vocab['UNK'] = num_topic - 1
+    return topic_vocab
 
 
-def make_questions_vocab(questions, answers, answer_vocab):
+def make_conversation_vocab(conversations, topics, topic_vocab):
     word_regex = re.compile(r'\w+')
-    question_frequency = {}
+    conversation_word_frequency = Counter()
 
-    max_question_length = 0
-    for i, question in enumerate(questions):
-        ans = answers[i]['multiple_choice_answer']
-        count = 0
-        if ans in answer_vocab:
-            question_words = re.findall(word_regex, question['question'])
-            for qw in question_words:
-                if qw in question_frequency:
-                    question_frequency[qw] += 1
-                else:
-                    question_frequency[qw] = 1
-                count += 1
-        if count > max_question_length:
-            max_question_length = count
+    max_conversation_length = 0
+    for i, conversation in enumerate(conversations):
+        topic = topics[i]
+        # Just keep the popular topics
+        if topic in topic_vocab:
+            conversation_words = re.findall(word_regex, conversation)
+            for word in conversation_words:
+                # Check word duplicate to topic, if found, stop everything
+                if word in topic.split(" "):
+                    print("Duplicate caution word in topic!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    print(topic, word, conversation)
+                    return [], []
+                conversation_word_frequency[word] += 1
+            if len(conversation_words) > max_conversation_length:
+                max_conversation_length = len(conversation_words)
 
-    qw_freq_threhold = 0
-    qw_tuples = [(-frequency, qw) for qw, frequency in question_frequency.iteritems()]
-    # qw_tuples.sort()
+    print("conversation_word_frequency", conversation_word_frequency)
+    word_freq_threshold = 0
+    conversation_word_vocab = {}
+    index = 0
+    for word, frequency in conversation_word_frequency.items():
+        if frequency > word_freq_threshold:
+            # +1 for accounting the zero padding for batch training, index 0 is used to fill missing length conversation
+            # Set index for conversation word
+            conversation_word_vocab[word] = index + 1
+            index += 1
 
-    qw_vocab = {}
-    for i, qw_freq in enumerate(qw_tuples):
-        frequency = -qw_freq[0]
-        qw = qw_freq[1]
-        # print frequency, qw
-        if frequency > qw_freq_threhold:
-            # +1 for accounting the zero padding for batc training
-            qw_vocab[qw] = i + 1
-        else:
-            break
+    conversation_word_vocab['UNK'] = len(conversation_word_vocab) + 1
 
-    qw_vocab['UNK'] = len(qw_vocab) + 1
-
-    return qw_vocab, max_question_length
+    return conversation_word_vocab, max_conversation_length
 
 
 def load_fc7_features(data_dir, split):
@@ -204,6 +162,3 @@ def load_fc7_features(data_dir, split):
     with h5py.File(join(data_dir, (split + '_image_id_list.h5')), 'r') as hf:
         image_id_list = np.array(hf.get('image_id_list'))
     return fc7_features, image_id_list
-
-
-# prepare_training_data()
