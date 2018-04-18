@@ -52,6 +52,8 @@ def main():
 
     ans_map = {qa_data['topic_vocab'][ans]: ans for ans in qa_data['topic_vocab']}
 
+    lstm_steps = qa_data['max_conversation_length'] if args.model == "lstm_model" else qa_data[
+                                                                                           'max_conversation_length'] + 1
     model_options = {
         'num_lstm_layers': args.num_lstm_layers,
         'rnn_size': args.rnn_size,
@@ -59,7 +61,7 @@ def main():
         'word_emb_dropout': args.word_emb_dropout,
         'image_dropout': args.image_dropout,
         'fc7_feature_length': args.fc7_feature_length,
-        'lstm_steps': qa_data['max_conversation_length'] + 1,
+        'lstm_steps': lstm_steps,
         'q_vocab_size': len(qa_data['conversation_vocab']),
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
