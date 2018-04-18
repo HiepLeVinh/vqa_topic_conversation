@@ -31,10 +31,11 @@ def main():
     #                     help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model9.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
+    parser.add_argument('--model', type=str, default="cnn_lstm_model", help='model to run')
 
     args = parser.parse_args()
     print("Reading QA DATA")
@@ -63,7 +64,15 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = lstm_model.lstm_model(model_options)
+    if args.model == "cnn_lstm_model":
+        model = lstm_model.lstm_model(model_options)
+    elif args.model == "cnn_model":
+        model = cnn_model.cnn_model(model_options)
+    elif args.model == "lstm_model":
+        model = lstm_model.lstm_model(model_options)
+    else:
+        model = None
+
     input_tensors, t_prediction, t_ans_probab = model.build_generator()
     sess = tf.InteractiveSession()
     saver = tf.train.Saver()

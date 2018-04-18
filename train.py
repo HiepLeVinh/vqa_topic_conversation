@@ -27,7 +27,7 @@ def main():
                         help='Batch Size')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Batch Size')
-    parser.add_argument('--epochs', type=int, default=10,
+    parser.add_argument('--epochs', type=int, default=20,
                         help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
@@ -35,6 +35,7 @@ def main():
                         help='Trained Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
+    parser.add_argument('--model', type=str, default="cnn_lstm_model", help='model to run')
 
     args = parser.parse_args()
     print("Reading QA DATA")
@@ -65,7 +66,15 @@ def main():
         'ans_vocab_size': len(qa_data['topic_vocab'])
     }
 
-    model = lstm_model.lstm_model(model_options)
+    if args.model == "cnn_lstm_model":
+        model = lstm_model.lstm_model(model_options)
+    elif args.model == "cnn_model":
+        model = cnn_model.cnn_model(model_options)
+    elif args.model == "lstm_model":
+        model = lstm_model.lstm_model(model_options)
+    else:
+        model = None
+
     input_tensors, t_loss, t_accuracy, t_p = model.build_model()
     train_op = tf.train.AdamOptimizer(args.learning_rate).minimize(t_loss)
     sess = tf.InteractiveSession()
