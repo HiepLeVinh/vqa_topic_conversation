@@ -31,7 +31,7 @@ def main():
     #                     help='Expochs')
     parser.add_argument('--debug', type=bool, default=False,
                         help='Debug')
-    parser.add_argument('--model_path', type=str, default='data/models/model19.ckpt',
+    parser.add_argument('--model_path', type=str, default='data/models/model9.ckpt',
                         help='Model Path')
     parser.add_argument('--version', type=int, default=2,
                         help='VQA data version')
